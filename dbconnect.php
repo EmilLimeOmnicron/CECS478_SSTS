@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "username";
-$password = "Kappa123";
+$password = "filler";
 
 try {
 $conn = new PDO("mysql:host=$servername;dbname=webdata", $username, $password);
