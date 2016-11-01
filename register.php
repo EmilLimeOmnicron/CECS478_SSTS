@@ -1,50 +1,33 @@
-
-                                                                    File: register.php                                                                                                                                                                
-
 <?php
-
-$name = $_POST["username"];
-$email = $_POST["email"];
-$password = $_POST["password"];
-//$db
-
-
-$name = mysqli_real_escape_string($db, $name);
-$email = mysqli_real_escape_string($db, $email);
-$password = mysqli_real_escape_string($db, $password);
-$hashAndSalt = password_hash($password, PASSWORD_BCRYPT);
-
-//check if email is taken
-$sql = "SELECT email FROM users WHERE email='$email'";
-$result = mysqli_query($db,$sql);
-$row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-
-if(mysqli_num_rows($result) == 1)
-{
- echo "Sorry. This email already exists";
+session_start();
+ require 'dbconnect.php';
+$username = strip_tags($_POST['username']); 
+$email = strip_tags($_POST['email']);
+ $pass = strip_tags($_POST['password']);
+ $hashAndSalt = password_hash($pass, PASSWORD_BCRYPT);
+ $stmt1 = mysqli_prepare($conn, "insert into users(username, email, password) values (?,?,?)");
+ $stmt2 = mysqli_prepare($conn, "SELECT * from users where email = ?");
+ $stmt3 = mysqli_prepare($conn, "SELECT * from users where username = ?");
+ mysqli_stmt_bind_param($stmt1, "sss", $username, $email, $hashAndSalt);
+ mysqli_stmt_bind_param($stmt2, "s", $email); 
+mysqli_stmt_bind_param($stmt3, "s", $username);
+ mysqli_stmt_execute($stmt2);
+ mysqli_stmt_execute($stmt3);
+ mysqli_stmt_store_result($stmt2);
+ mysqli_stmt_store_result($stmt3);
+ $row2 = mysqli_stmt_num_rows($stmt2);
+ $row3 = mysqli_stmt_num_rows($stmt3);
+ $response = array();
+ $response["success"] = false;
+ if($row2 > 1 and $row3 > 1) {
+        echo 'username/email is not evailable';
 }
-else
-{
- //Code goes here.
- //Checks if username is taken
- $sql = "SELECT username FROM users WHERE username='$username'";
- $result = mysqli_query($db,$sql);
- $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-
- if(mysqli_now_rows($result) == 1)
- {
-  echo "Sorry. This username is already taken";
- }
- else
- {
-  $query = mysqli_query($db, "INSERT INTO users (name, email, password)VALUES ('$name', '$email', '$hashAndSalt')");
+else{
+        echo 'Thanks for registering';
+    mysqli_stmt_execute($stmt1);
+    mysqli_stmt_close($stmt1);
 }
-   if($query)
-  {
-   echo "Thank You! You are now registered.";                                                                                                                                                                                                                                  
- }                                                                                                                                                                                                                                                                             
-}
+mysqli_stmt_close($stmt2);
+ mysqli_stmt_close($stmt3);
+ echo json_encode($response);
 ?>
-
-
-
