@@ -1,5 +1,7 @@
 <?php
+require_once 'dbconnect.php';
 use \Firebase\JWT\JWT;
+
 define('SECRET_KEY','fill_secret'); 
 define('ALGORITHM','HS512');
 
@@ -7,7 +9,7 @@ define('ALGORITHM','HS512');
     $pass = !empty($_POST['password']);
 
                 // if there is no error below code run
-                $statement = $config->prepare("select * from users where username = :username" );
+                $statement = $conn->prepare("select * from users where username = :username" );
                 $statement->execute(array(':username' => $username));
                 $row = $statement->fetchAll(PDO::FETCH_ASSOC);
                 $hashAndSalt = password_hash($password, PASSWORD_BCRYPT);
