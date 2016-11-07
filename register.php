@@ -2,11 +2,13 @@
 session_start();
  require 'dbconnect.php';
 
+//Register using username, email, and password.
  $username =strip_tags($_POST['username']);
  $email =strip_tags($_POST['email']);
  $pass = strip_tags($_POST['password']);
  $hashAndSalt = password_hash($pass, PASSWORD_BCRYPT);
 
+//Prepared Statements
  $stmt1 = mysqli_prepare($conn, "insert into users(username, email, password) values (?,?,?)");
  $stmt2 = mysqli_prepare($conn, "SELECT * from users where email = ?");
  $stmt3 = mysqli_prepare($conn, "SELECT * from users where username = ?");
@@ -38,6 +40,7 @@ session_start();
     printf("rows inserted: %d\n", mysqli_stmt_affected_rows($stmt1));
     mysqli_stmt_close($stmt1);
  }
+//Clean up environment
  mysqli_stmt_close($stmt2);
  mysqli_stmt_close($stmt3);
 
