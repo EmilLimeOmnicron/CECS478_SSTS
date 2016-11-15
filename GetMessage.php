@@ -1,46 +1,68 @@
 <?php
+
+require_once('vendor/autoload.php');
 require_once 'dbconnect.php';
+use \Firebase\JWT\JWT;
 
-$username = $_GET['receiver'];
+define('ALGORITHM', 'HS512');
+define('SECRET_KEY','s25cLeE3205q4UwNG39ENX4lDGN63awS');
 
+
+  $headers = apache_request_headers();
+  $token = $headers['token'];
+//read username from token
+try {
+     $jwt = JWT::decode($token, SECRET_KEY, array(ALGORITHM));
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+//if we have a token
+if(isset($jwt)) {
+	echo "JWT DECODE\n";
+		}
+
+     $jwtArr = (array) $jwt;
+if(isset($jwtArr)) {echo "JWT ARRAY\n";}
+
+     $username = $jwtArr['data']->name;
+//check if name exists from token
+if(isset($username)) {
+	echo "JWT DONE, user SET FROM TOKEN\n";
+		     }
+
+if(isset($username)) {
+echo "$username 's messages\n";
+
+  $stmt = mysqli_stmt_init($conn);
+echo "INIT\n";
+ if( mysqli_stmt_prepare($stmt, "SELECT * FROM messages WHERE receiver = ? OR sender = ?")){
+	 echo "PREP\n";
+}
+ if(mysqli_stmt_bind_param($stmt, "ss", $username, $username)){
+	 echo "BIND\n";
+}
+  if(mysqli_stmt_execute($stmt)){
+	  echo "EXECUTE\n";
+}
+  if( $result = mysqli_stmt_get_result($stmt)) {
+	  echo "getResult\n";
+}
+
+$numMessages = mysqli_num_rows ($result);
+printf("Result set has %d rows.\n", $numMessages);
+
+
+$c = 0;
 	
-	 $stmt1 = mysqli_prepare($conn, "SELECT * FROM messages WHERE receiver = ?");
-	 mysqli_stmt_bind_param($stmt1,"s", $username);
-	 mysqli_stmt_execute($stmt1);
-	 $result1 = mysqli_query($conn, $stmt1);
-	 $row1 = mysqli_fetch_assoc($result1);
-	//make sure theres a row of users
-if(isset($username) &&  $row1 > 0) {
-	
-	$stmt = mysqli_prepare("SELECT * FROM messages WHERE receiver = ? OR sender = ? ORDER BY timeSent");
- mysqli_stmt_bind_param($stmt, "ss", $username, $username);
-     mysqli_stmt_execute($stmt);
-	 $result = mysqli_query($conn, $stmt);
-	 $row = mysqli_fetch_assoc($result);
-	 
-	 if($row > 0) {
-		 while($row = $result->fetch_assoc()) {
-			 $sender = $row['sender'];
-			 $receiver = $row['receiver'];
-			 $message = $row['message'];
-			 $timeSent = $row['timeSent'];
-			 $data = [
-			 'sender' => $sender,
-			 'receiver' => $receiver,
-			 'message' => $message,
-			 'timeSent' => $timeSent
-			 ];
-		 }
-	 }
-	//TODO: output messages 
-     mysqli_stmt_close($stmt);
-	
-	
+	//print all messages of current user.
+         while($row = mysqli_fetch_assoc($result)) {
+                echo "".$row['message']."\n";
+        }
+
 }
 else {
-	echo 'user doesnt exist';
+  echo "User doesnt exist";
 }
- mysqli_stmt_close($stmt1); 
-
 
 ?>
+
