@@ -62,7 +62,7 @@ if(mysqli_stmt_num_rows($stmt) > 0){
 
                     $issuedAt   = time();
                     $notBefore  = $issuedAt + 10;  //Adding 10 seconds
-                    $expire     = $notBefore + 60; // Adding 60 seconds
+                    $expire     = $notBefore + 7200; // Adding 60 seconds
                     $serverName = 'localhost'; /// set your domain name
                    //Bundle for token
                    $data = [
