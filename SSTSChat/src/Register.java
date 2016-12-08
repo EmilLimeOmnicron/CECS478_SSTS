@@ -1,42 +1,60 @@
 
-
 import java.io.IOException;
-import org.apache.http.HttpResponse;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 public class Register {
+	
+	private CloseableHttpClient httpclient;
+	private String username;
+	private String email;
+	private String password;
 
-    private CloseableHttpClient httpclient;
- 
-    public void register(String uname, String email, String pass) {
-      // httpclient = HttpClientBuilder.create().build();
-        final String url = "https://www.sstssecurity.com/register.php";
-        JSONObject json = new JSONObject();
-
-        try {
-        	
-			json.put("username", uname);  
-			json.put("email", email);
-	        json.put("password", pass);
-	        // Create the POST object and add the parameters
-	        HttpPost httpPost = new HttpPost(url);
-	        StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
-	        entity.setContentType("application/json");
-	        httpPost.setEntity(entity);
-	        CloseableHttpClient httpclient= HttpClientBuilder.create().build();
-	        HttpResponse response = httpclient.execute(httpPost);
-	        System.out.println(response);
-		} catch (JSONException | IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+	public Register() {
+		httpclient = HttpClients.createDefault();
+	}
+	
+	public Register(String name, String mail, String pass) {
+		httpclient = HttpClients.createDefault();
+		username = name;
+		email = mail;
+		password = pass;
+	}
+	
+	public void Execute() {
+		try {
+	    System.out.println("POST ---");
+		//HttpPost httpPost = new HttpPost("http://httpbin.org/post");
+		HttpPost httpPost = new HttpPost("http://sstssecurity.com/register.php");
+		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+		nvps.add(new BasicNameValuePair("username", username));
+		nvps.add(new BasicNameValuePair("email", email));
+		nvps.add(new BasicNameValuePair("password", password));
+		httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+		CloseableHttpResponse response2 = httpclient.execute(httpPost);
+	
+	    System.out.println(response2.getStatusLine());
+	    HttpEntity entity2 = response2.getEntity();
+	    // do something useful with the response body
+	    // and ensure it is fully consumed
+	    //EntityUtils.consume(entity2);
+	    System.out.println(EntityUtils.toString(entity2));
+	    response2.close();
+		} catch(IOException e) {
+			System.out.println("IOException");
 		}
-      
-    }
-
+	}
 }
