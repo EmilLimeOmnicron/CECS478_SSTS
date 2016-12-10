@@ -21,23 +21,27 @@ public class Main {
     public static void main(String[] args) {
        
         String token;
- 
+        int jwtStart = 8;
         //System.out.println("TEST Register --------------------");
        
-    //    Register reg = new Register("Clarissa", "clarissa@yahoo", "password");
-      //  reg.Execute();
+     Register reg = new Register("emildavid", "emildavid@yahoo.com", "password123");
+       reg.Execute();
        
        
         //System.out.println("TEST LOGIN --------------------");
        
-        Login log = new Login("Clarissa", "password");
+        Login log = new Login("emildavid", "password123");
         token = log.Execute();
-        System.out.println(token);
         
-        SendMessage sm = new SendMessage("daniel","Hi this is a test", token);
+        String modifiedToken = token.substring(8, token.length()-2);
+        System.out.println(modifiedToken);
+
+        SendMessage sm = new SendMessage("daniel","im a trumpW sub", modifiedToken);
         sm.Execute();
        
         //System.out.println("TEST GetMessage ---------------");
+       GetMessage gm = new GetMessage(modifiedToken);
+       gm.Execute();
        
  
         //System.out.println("TEST SendMessage -------------------");

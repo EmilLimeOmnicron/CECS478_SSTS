@@ -40,10 +40,11 @@ public class SendMessage {
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
         nvps.add(new BasicNameValuePair("receiver", receiver));
         nvps.add(new BasicNameValuePair("message", message));
-        nvps.add(new BasicNameValuePair("token", token));
+
+        httpPost.addHeader("token", token);
         httpPost.setEntity(new UrlEncodedFormEntity(nvps));
         CloseableHttpResponse response2 = httpclient.execute(httpPost);
-   
+     
         System.out.println(response2.getStatusLine());
         HttpEntity entity2 = response2.getEntity();
         // do something useful with the response body

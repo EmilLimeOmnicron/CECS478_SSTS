@@ -16,31 +16,25 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
  
 public class GetMessage {
-   /*
+   
     private CloseableHttpClient httpclient;
-    private String receiver;
-    private String message;
+    private String token;
  
- 
-    public SendMessage() {
+    public GetMessage() {
         httpclient = HttpClients.createDefault();
     }
    
-    public SendMessage(String rec, String mes) {
+    public GetMessage(String tok) {
         httpclient = HttpClients.createDefault();
-        receiver = rec;
-        message = mes;
-      
+        token = tok;
     }
    
     public void Execute() {
         try {
-        System.out.println("POST ---");
-        HttpPost httpPost = new HttpPost("https://sstssecurity.com/SendMessage.php");
+        System.out.println("GET ---");
+        HttpPost httpPost = new HttpPost("https://sstssecurity.com/getMessage.php");
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-        nvps.add(new BasicNameValuePair("receiver", receiver));
-        nvps.add(new BasicNameValuePair("message", message));
-   
+         httpPost.addHeader("token", token);
         httpPost.setEntity(new UrlEncodedFormEntity(nvps));
         CloseableHttpResponse response2 = httpclient.execute(httpPost);
    
@@ -55,6 +49,6 @@ public class GetMessage {
             System.out.println("IOException");
             e.printStackTrace();
         }
-    }8*..*.*/
+    }
 }
  
