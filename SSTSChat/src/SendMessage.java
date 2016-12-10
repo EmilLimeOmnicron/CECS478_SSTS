@@ -15,32 +15,32 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
  
-public class Register {
+public class SendMessage {
    
     private CloseableHttpClient httpclient;
-    private String username;
-    private String email;
-    private String password;
+    private String receiver;
+    private String message;
+    private String token;
  
-    public Register() {
+    public SendMessage() {
         httpclient = HttpClients.createDefault();
     }
    
-    public Register(String name, String mail, String pass) {
+    public SendMessage(String rec, String mes, String tok) {
         httpclient = HttpClients.createDefault();
-        username = name;
-        email = mail;
-        password = pass;
+        receiver = rec;
+        message = mes;
+       token = tok;
     }
    
     public void Execute() {
         try {
         System.out.println("POST ---");
-        HttpPost httpPost = new HttpPost("https://sstssecurity.com/register.php");
+        HttpPost httpPost = new HttpPost("https://sstssecurity.com/SendMessage.php");
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-        nvps.add(new BasicNameValuePair("username", username));
-        nvps.add(new BasicNameValuePair("email", email));
-        nvps.add(new BasicNameValuePair("password", password));
+        nvps.add(new BasicNameValuePair("receiver", receiver));
+        nvps.add(new BasicNameValuePair("message", message));
+        nvps.add(new BasicNameValuePair("token", token));
         httpPost.setEntity(new UrlEncodedFormEntity(nvps));
         CloseableHttpResponse response2 = httpclient.execute(httpPost);
    

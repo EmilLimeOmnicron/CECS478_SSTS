@@ -15,32 +15,32 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
  
-public class Register {
-   
+public class GetMessage {
+   /*
     private CloseableHttpClient httpclient;
-    private String username;
-    private String email;
-    private String password;
+    private String receiver;
+    private String message;
  
-    public Register() {
+ 
+    public SendMessage() {
         httpclient = HttpClients.createDefault();
     }
    
-    public Register(String name, String mail, String pass) {
+    public SendMessage(String rec, String mes) {
         httpclient = HttpClients.createDefault();
-        username = name;
-        email = mail;
-        password = pass;
+        receiver = rec;
+        message = mes;
+      
     }
    
     public void Execute() {
         try {
         System.out.println("POST ---");
-        HttpPost httpPost = new HttpPost("https://sstssecurity.com/register.php");
+        HttpPost httpPost = new HttpPost("https://sstssecurity.com/SendMessage.php");
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-        nvps.add(new BasicNameValuePair("username", username));
-        nvps.add(new BasicNameValuePair("email", email));
-        nvps.add(new BasicNameValuePair("password", password));
+        nvps.add(new BasicNameValuePair("receiver", receiver));
+        nvps.add(new BasicNameValuePair("message", message));
+   
         httpPost.setEntity(new UrlEncodedFormEntity(nvps));
         CloseableHttpResponse response2 = httpclient.execute(httpPost);
    
@@ -55,6 +55,6 @@ public class Register {
             System.out.println("IOException");
             e.printStackTrace();
         }
-    }
+    }8*..*.*/
 }
  
