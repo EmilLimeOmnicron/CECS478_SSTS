@@ -2,94 +2,128 @@
 require_once 'dbconnect.php';
 require_once('vendor/autoload.php');
 use \Firebase\JWT\JWT;
-define('ALGORITHM','HS512');   
-define('SECRET_KEY','Your-Secret-key'); //placeholder key
+define('ALGORITHM','HS512');
+define('SECRET_KEY', SECRET KEY);
+header('Content-Type: application/json');
 
-//Login uses username and password
     $username = $_POST['username'];
     $pass = $_POST['password'];
 
-echo "username '$username', password '$pass'\n";
-
 $stmt = mysqli_stmt_init($conn);
 
-//SQL statements for the correct login of the user.
-if(mysqli_stmt_prepare($stmt, "SELECT COUNT(username) AS num FROM users WHERE username = ?")){
+if(mysqli_stmt_prepare($stmt, "SELECT COUNT(username) AS num FROM users WHERE username = ?"))
+{
+//  echo "PREPARE WORKS\n";
 }
-else{
-}
-
-if(mysqli_stmt_bind_param($stmt, "s", $username)){
-}
-else {
+else
+{
+//  echo "PREPARE DIDNT WORK\n";
 }
 
-if(mysqli_stmt_execute($stmt)){
+if(mysqli_stmt_bind_param($stmt, "s", $username))
+{
+//  echo "BIND WORKS\n";
 }
-else{
-}
-
-if(mysqli_stmt_store_result($stmt)){
-}
-else{
-}
-
-if(mysqli_stmt_fetch ($stmt)){
-	}
-else{
+else
+{
+//  echo "BIND BROKE\n";
 }
 
-if(mysqli_stmt_num_rows($stmt) > 0){
+if(mysqli_stmt_execute($stmt))
+{
+//  echo "EXECUTED\n";
+}
+else
+{
+//  echo "NOT EXECUTED\n";
+}
+
+if(mysqli_stmt_store_result($stmt))
+{
+//  echo "STORED\n";
+}
+else
+{
+//  echo "NOT STORED\n";
+}
+
+if(mysqli_stmt_fetch ($stmt))
+{
+//  echo "RESULT FETCHED\n";
+}
+else
+{
+//  echo "RESULT NOT FETCHED\n";
+}
+
+//printf("Number of rows: %d.\n", mysqli_stmt_num_rows($stmt));
+
+if(mysqli_stmt_num_rows($stmt) > 0)
+{
+//  echo "GET PASS\n";
 
   mysqli_stmt_free_result($stmt);
   $getPass = mysqli_stmt_init($conn);
-
+//  echo "INIT\n";
  if( mysqli_stmt_prepare($getPass, "SELECT password FROM users WHERE username = ?")){
+//      echo "PREP\n";
  }
- if(mysqli_stmt_bind_param($getPass, "s", $username)){
+ if(mysqli_stmt_bind_param($getPass, "s", $username)) {
+//      echo "BIND\n";
  }
-  if(mysqli_stmt_execute($getPass)){
-  }
-  if( $result = mysqli_stmt_get_result($getPass)){
-  }
-  
+  if(mysqli_stmt_execute($getPass)) {
+//      echo "EXECUTE\n";
+ }
+  if( $result = mysqli_stmt_get_result($getPass)) {
+//      echo "getResult\n";
+}
+//  printf("Number of rows: %d\n", $hashedPass);
   if($hashedPass = mysqli_fetch_assoc($result)) {
-   }
-	//Verify if password is correct
-        if (password_verify($pass, $hashedPass['password'])) {
+//      echo "FETCH\n";
+  }
+//  echo "HASHED PASS ".$hashedPass['password']."\n";
+	if (password_verify($pass, $hashedPass['password'])) {
+//              echo "password valid\n";
+		$tokenId    = base64_encode(mcrypt_create_iv(32));
+		$issuedAt   = time();
+		$notBefore  = $issuedAt;  //Adding no extra time
+		$expire     = $notBefore + 7200; // Adding 60 seconds
+		$serverName = 'localhost'; /// set your domain name
+//echo "this is the tken ID";
+//echo $tokenID;
 
-                $tokenId    = base64_encode(mcrypt_create_iv(32));
+	   $data = [
+			'iat'  => $issuedAt,         // Issued at: time when the token was generated
+			'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+			'iss'  => $serverName,       // Issuer
+			'nbf'  => $notBefore,        // Not before
+			'exp'  => $expire,           // Expire
+			'data' => [                  // Data related to the logged user you can set your required data
+					//    'id'   => ['id'], // id from the users table
+						 'name' => $username //,  name
+					  ]
+		];
+//echo "this is the data";
+//      echo $data;
+		$secretKey = base64_decode(SECRET_KEY);
+		
+		/// Here we will transform this array into JWT:
+			  $jwt = JWT::encode(
+						$data, //Data to be encoded in the JWT
+						SECRET_KEY, // The signing key
+						ALGORITHM
+					 );
+///echo $jwt;
+			$response["jwt"] = $jwt;
+			echo json_encode($response);
+//              $unencodedArray = ['jwt' => $jwt];
 
-                    $issuedAt   = time();
-                    $notBefore  = $issuedAt + 10;  //Adding 10 seconds
-                    $expire     = $notBefore + 7200; // Adding 60 seconds
-                    $serverName = 'localhost'; /// set your domain name
-                   //Bundle for token
-                   $data = [
-                        'iat'  => $issuedAt,         // Issued at: time when the token was generated
-                        'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
-                        'iss'  => $serverName,       // Issuer
-                        'nbf'  => $notBefore,        // Not before
-                        'exp'  => $expire,           // Expire
-                        'data' => [                  // Data related to the logged user you can set your required data                                                                                                                                                         
-                                //    'id'   => ['id'], // id from the users table
-                                     'name' => $username, //  name 
-                                  ]
-                    ];
-
-                  $secretKey = base64_decode(SECRET_KEY);
-              
-                  //encode token
-                  $jwt = JWT::encode(
-                            $data, //Data to be encoded in the JWT
-                            SECRET_KEY, // The signing key
-                          ALGORITHM
-                                 );
-                 echo $jwt; 
-     
-                 } else {
-                  echo  "{'status' : 'error','msg':'Invalid username or password'}";
-                  }
+	 } else {
+			echo  "{'status' : 'error','msg':'Invalid username or password'}";
+	 }
 }
 ?>
+
+
+
 
