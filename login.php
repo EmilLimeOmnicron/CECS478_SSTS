@@ -2,8 +2,10 @@
 require_once 'dbconnect.php';
 require_once('vendor/autoload.php');
 use \Firebase\JWT\JWT;
-define('ALGORITHM','HS512');
-define('SECRET_KEY', SECRET KEY);
+
+define('ALGORITHM','HS512');   // Algorithm used to signthe token, see
+define('SECRET_KEY','-');
+
 header('Content-Type: application/json');
 
     $username = $_POST['username'];
@@ -79,6 +81,7 @@ if(mysqli_stmt_num_rows($stmt) > 0)
 }
 //  printf("Number of rows: %d\n", $hashedPass);
   if($hashedPass = mysqli_fetch_assoc($result)) {
+<<<<<<< HEAD
 //      echo "FETCH\n";
   }
 //  echo "HASHED PASS ".$hashedPass['password']."\n";
@@ -123,7 +126,3 @@ if(mysqli_stmt_num_rows($stmt) > 0)
 	 }
 }
 ?>
-
-
-
-

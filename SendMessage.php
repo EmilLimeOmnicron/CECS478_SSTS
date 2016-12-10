@@ -6,7 +6,7 @@ require_once 'dbconnect.php';
 use \Firebase\JWT\JWT;
 
 define('ALGORITHM', 'HS512');
-define('SECRET_KEY', SECRET KEY);
+define('SECRET_KEY','-');
 
 if(isset($_POST['message']) &&  isset($_POST['receiver'])) {
 
@@ -20,6 +20,7 @@ try {
 } catch (Exception $e) {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }
+
 if(isset($jwt)) {}//echo "JWT DECODE\n";}
 
      $jwtArr = (array) $jwt;
@@ -37,12 +38,10 @@ if(isset($sender)) {}//echo "JWT DONE, SENDER SET FROM TOKEN\n";}
 //echo "STATEMENT EXECUTED AND CLOSED\n";
 
         echo 'Message Sent!';
+		
 }
 else {
   echo 'sender, receiver, or message doesnt exist';
 }
 ?>
-
-
-
 

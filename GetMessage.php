@@ -6,7 +6,7 @@ require_once 'dbconnect.php';
 use \Firebase\JWT\JWT;
 
 define('ALGORITHM', 'HS512');
-define('SECRET_KEY', SECRET KEY);
+define('SECRET_KEY','-');
 
   $headers = apache_request_headers();
   $token = $headers['token'];
@@ -35,7 +35,7 @@ if(isset($username)) {echo "$username 's messages\n";
         if( mysqli_stmt_prepare($stmt, "SELECT * FROM messages WHERE receiver = ? OR sender = ?")){
 //              echo "PREP\n";
         }
-
+		
         if(mysqli_stmt_bind_param($stmt, "ss", $username, $username)){
 //              echo "BIND\n";
         }
@@ -70,4 +70,6 @@ else {
 }
 
 ?>
+
+
 

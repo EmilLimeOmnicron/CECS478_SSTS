@@ -1,6 +1,8 @@
+
 <?php
 session_start();
  require 'dbconnect.php';
+ ///$conn = mysqli_connect("localhost", "root", "Kappa123", "webdata");
 
  $username =strip_tags($_POST['username']);
  $email =strip_tags($_POST['email']);
@@ -14,6 +16,8 @@ session_start();
  mysqli_stmt_bind_param($stmt2, "s", $email);
  mysqli_stmt_bind_param($stmt3, "s", $username);
 
+// echo "beginInfo '$username', '$email', '$pass', '$hashAndSalt'  endInfo";
+
  mysqli_stmt_execute($stmt2);
  mysqli_stmt_store_result($stmt2);
  $row2 = mysqli_stmt_num_rows($stmt2);
@@ -22,9 +26,12 @@ session_start();
  mysqli_stmt_store_result($stmt3);
  $row3 = mysqli_stmt_num_rows($stmt3);
 
+// printf("Number of emails: %d.\n", mysqli_stmt_num_rows($stmt2));
+// printf("Number of usernames: %d.\n", mysqli_stmt_num_rows($stmt3));
+
  ///stop if username OR email are taken
  if($row2 != 0 or $row3  != 0) {
-        echo 'username/email is not available';
+        echo 'username/email is not evailable';
  }
  else{
     echo "Thanks for registering";
