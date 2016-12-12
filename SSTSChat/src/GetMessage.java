@@ -43,7 +43,12 @@ public class GetMessage {
         // do something useful with the response body
         // and ensure it is fully consumed
         //EntityUtils.consume(entity2);
-        System.out.println(EntityUtils.toString(entity2));
+        
+        //returns a byte 
+        byte[] allMessages = EntityUtils.toByteArray(entity2);
+        
+        
+        //System.out.println(EntityUtils.toString(entity2));
         response2.close();
         } catch(IOException e) {
             System.out.println("IOException");

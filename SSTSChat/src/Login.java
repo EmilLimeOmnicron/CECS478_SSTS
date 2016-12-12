@@ -47,12 +47,10 @@ public class Login {
             HttpEntity entity2 = response2.getEntity();
             // do something useful with the response body
             // and ensure it is fully consumed
-            //EntityUtils.consume(entity2);
             //System.out.println(EntityUtils.toString(entity2));
            
-            //System.out.println("GONNA WRITE TO TOKEN ====================");
             token = EntityUtils.toString(entity2);
-            //System.out.println("TOKEN IS STORED ====================");
+
             response2.close();
         } catch(IOException e) {
             System.out.println("IOException");
