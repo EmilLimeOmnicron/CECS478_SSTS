@@ -1,3 +1,4 @@
 # CECS478_SSTS
-
-Simple Chat using PHP
+Security Semester Project
+Chat server using PHP. Routes are tested using
+https://www.getpostman.com/
